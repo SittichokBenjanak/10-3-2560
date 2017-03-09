@@ -7,7 +7,7 @@
     <dimen name="menu">140dp</dimen>
     <dimen name="edittext">200dp</dimen>
     <dimen name="h1">35sp</dimen>
-    <dimen name="h4">27sp</dimen>
+    <dimen name="h4">24sp</dimen>
     <dimen name="h2">20sp</dimen>
     <dimen name="h3">15sp</dimen>
 </resources>
