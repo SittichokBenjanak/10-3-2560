@@ -96,7 +96,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         while (intTimes <= 1) {
             InputStream objInputStream = null;
             String strJSON = null;
-            String strURLuser = "http://192.168.43.169/sittichok/get/get_user.php";
+            String strURLuser = "http://192.168.1.113/sittichok/get/get_user.php";
             HttpPost objHttpPost = null;
             //1. Create InputStream
             try {
@@ -191,7 +191,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             try {
                 OkHttpClient okHttpClient = new OkHttpClient();
                 Request.Builder builder = new Request.Builder();
-                Request request = builder.url("http://192.168.43.169/sittichok/get/get_last_orderdetail.php").build();
+                Request request = builder.url("http://192.168.1.113/sittichok/get/get_last_orderdetail.php").build();
                 Response response = okHttpClient.newCall(request).execute();
                 return response.body().string();
             } catch (Exception e) {
@@ -353,7 +353,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             nameValuePairs.add(new BasicNameValuePair("Amount",strCurrentStock));
 
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost("http://192.168.43.169/sittichok/edit/edit_stock.php");
+            HttpPost httpPost = new HttpPost("http://192.168.1.113/sittichok/edit/edit_stock.php");
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
             httpClient.execute(httpPost);
 
@@ -398,7 +398,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 .add("Balance", Balance)
                 .build();
         Request.Builder builder = new Request.Builder();
-        Request request = builder.url("http://192.168.43.169/sittichok/edit/edit_money.php")
+        Request request = builder.url("http://192.168.1.113/sittichok/edit/edit_money.php")
                 .post(requestBody).build();
         Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
@@ -433,7 +433,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 .add("PriceTotal", strpriceTotal)
                 .build();
         Request.Builder builder = new Request.Builder();
-        Request request = builder.url("http://192.168.43.169/sittichok/add/add_tborderdetail.php")
+        Request request = builder.url("http://192.168.1.113/sittichok/add/add_tborderdetail.php")
                 .post(requestBody).build();
         Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
@@ -481,7 +481,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             nameValuePairs.add(new BasicNameValuePair("Status",strStatus));
             nameValuePairs.add(new BasicNameValuePair("Barcode",strBarcode));
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost("http://192.168.43.169/sittichok/add/add_tborder.php");
+            HttpPost httpPost = new HttpPost("http://192.168.1.113/sittichok/add/add_tborder.php");
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
             httpClient.execute(httpPost);
             Log.i("11April", "Update Finish");

@@ -86,7 +86,7 @@ public class showMenuActivity extends AppCompatActivity {
             try {
                 OkHttpClient okHttpClient = new OkHttpClient();
                 Request.Builder builder = new Request.Builder();
-                Request request = builder.url("http://192.168.43.169/sittichok/get/get_bread.php").build();
+                Request request = builder.url("http://192.168.1.113/sittichok/get/get_bread.php").build();
                 Response response = okHttpClient.newCall(request).execute();
                 return response.body().string();
             } catch (Exception e) {
@@ -243,18 +243,41 @@ public class showMenuActivity extends AppCompatActivity {
         try {
             ManageTABLE objManageTABLE = new ManageTABLE(this);
             String[] myResultStrings = objManageTABLE.SearchBread(strbread); // ถ้าลูกค้า สั่งสินค้า ชื่อเดิม
+            String[] myStringsitem = objManageTABLE.SearchitemBread(strbread); // เอาจำนวนมาเช็คสต๊อก
+            int stockItem = Integer.parseInt(myStringsitem[2]);
+            String stockstring = Integer.toString(stockItem);
             int oldItem = Integer.parseInt(myResultStrings[2]); //เอาไอเทมมา
             int newItem = Integer.parseInt(strItem) + oldItem;  // + กับไอเทมปัจจุบัน  parseInt เปลี่ยน String เป็น Integer
-            String strNewItem = Integer.toString(newItem);
-            SQLiteDatabase objSqLiteDatabase = openOrCreateDatabase(MyOpenHelper.DATABASE_NAME,
-                    MODE_PRIVATE, null);
-            objSqLiteDatabase.delete(ManageTABLE.TABLE_ORDER,  // ลบที่ซ้ำ
-                    ManageTABLE.COLUMN_id + "=" + Integer.parseInt(myResultStrings[0]), null);
-            addOrderToMySQLite(strName, strDate, strSurname, strAddress, strPhone, strbread, strPrice, strNewItem);
-            //ส่ง Orderที่ลูกค้าสั่ง อีก 1 แถว เพราะลบชื่อสินค้าที่ ลูกค้าสั่งซ้ำ
+
+            if (newItem > stockItem){
+                MyAlertDialog objMyAlertDialog = new MyAlertDialog();
+                objMyAlertDialog.errorDialog(showMenuActivity.this,"สินค้ามีไม่พอให้สั่งครับ",strbread +" ในสต๊อกมีอยู่ "+ stockstring + " ชิ้น");
+
+            }else {
+                String strNewItem = Integer.toString(newItem);
+                SQLiteDatabase objSqLiteDatabase = openOrCreateDatabase(MyOpenHelper.DATABASE_NAME,
+                        MODE_PRIVATE, null);
+                objSqLiteDatabase.delete(ManageTABLE.TABLE_ORDER,  // ลบที่ซ้ำ
+                        ManageTABLE.COLUMN_id + "=" + Integer.parseInt(myResultStrings[0]), null);
+                addOrderToMySQLite(strName, strDate, strSurname, strAddress, strPhone, strbread, strPrice, strNewItem);
+                //ส่ง Orderที่ลูกค้าสั่ง อีก 1 แถว เพราะลบชื่อสินค้าที่ ลูกค้าสั่งซ้ำ
+            }
+
         } catch (Exception e) {
-            addOrderToMySQLite(strName, strDate, strSurname, strAddress,  //ถ้าลูกค้าไม่ได้ เลือกสินค้า เดิม ก็ เพิ่ม ปกติ
-                    strPhone, strbread, strPrice, strItem);
+            ManageTABLE objManageTABLE = new ManageTABLE(this);
+            String[] myStringsitem = objManageTABLE.SearchitemBread(strbread); // เอาจำนวนมาเช็คสต๊อก
+            int stockItem = Integer.parseInt(myStringsitem[2]);
+            String stockstring = Integer.toString(stockItem);
+            int newItem = Integer.parseInt(strItem);
+
+            if (newItem > stockItem) {
+                MyAlertDialog objMyAlertDialog = new MyAlertDialog();
+                objMyAlertDialog.errorDialog(showMenuActivity.this,"สินค้ามีไม่พอให้สั่งครับ",strbread +" ในสต๊อกมีอยู่ "+ stockstring + " ชิ้น");
+            }else {
+                addOrderToMySQLite(strName, strDate, strSurname, strAddress,  //ถ้าลูกค้าไม่ได้ เลือกสินค้า เดิม ก็ เพิ่ม ปกติ
+                        strPhone, strbread, strPrice, strItem);
+            }
+
         }
     }   // addValueToSQLite
 
