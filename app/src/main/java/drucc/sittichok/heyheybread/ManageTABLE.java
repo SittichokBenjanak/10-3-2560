@@ -266,6 +266,7 @@ public class ManageTABLE {
                             String strPhone,
                             String strBread,
                             String strPrice,
+                            String strPricecost,
                             String strItem
                             ) {
 
@@ -278,6 +279,7 @@ public class ManageTABLE {
         objContentValues.put(COLUMN_Phone,strPhone);
         objContentValues.put(COLUMN_Bread,strBread);
         objContentValues.put(COLUMN_Price,strPrice);
+        objContentValues.put(COLUMN_PriceCost,strPricecost);
         objContentValues.put(COLUMN_Item,strItem);
 
         return writeSqLiteDatabase.insert(TABLE_ORDER,null,objContentValues);

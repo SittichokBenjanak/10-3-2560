@@ -172,11 +172,13 @@ public class showMenuActivity extends AppCompatActivity {
         final String[] breadStrings = new String[cursor.getCount()];
         final String[] priceStrings = new String[cursor.getCount()];
         final String[] amount2Strings = new String[cursor.getCount()];
+        final String[] priceCostStrings = new String[cursor.getCount()];
         for (int i = 0; i < cursor.getCount(); i++) {
             iconStrings[i] = cursor.getString(cursor.getColumnIndex(ManageTABLE.COLUMN_Image));
             breadStrings[i] = cursor.getString(cursor.getColumnIndex(ManageTABLE.COLUMN_Bread));
             priceStrings[i] = cursor.getString(cursor.getColumnIndex(ManageTABLE.COLUMN_Price));
             amount2Strings[i] = cursor.getString(cursor.getColumnIndex(ManageTABLE.COLUMN_Amount2));
+            priceCostStrings[i] = cursor.getString(cursor.getColumnIndex(ManageTABLE.COLUMN_PriceCost));
             cursor.moveToNext();
         } // for
         cursor.close();
@@ -188,13 +190,14 @@ public class showMenuActivity extends AppCompatActivity {
         menuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ChooseItem(breadStrings[i], priceStrings[i]); //ถ้าคลิกเลือกจำนวนสินค้าจะเรียกใช้เมดธอท ChooseItem
+                ChooseItem(breadStrings[i], priceStrings[i], priceCostStrings[i]); //ถ้าคลิกเลือกจำนวนสินค้าจะเรียกใช้เมดธอท ChooseItem
             }   // event
         });
     }   //  ListViewController
 
     private void ChooseItem(final String breadString,
-                            final String priceString) {
+                            final String priceString,
+                            final String pricecostString) {
         CharSequence[] mySequences = {"1 ชิ้น", "2 ชิ้น", "3 ชิ้น", "4 ชิ้น", "5 ชิ้น",
                 "6 ชิ้น", "7 ชิ้น", "8 ชิ้น", "9 ชิ้น", "10 ชิ้น",};
         //final int intItem = 0;
@@ -205,7 +208,7 @@ public class showMenuActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 int intItem = i + 1;     // จำนวนที่สั่ง
                 // update to SQLite พักไว้ที่ SQLite ยังไม่ขึ้นไปที่ mySQL
-                UpdateOrderToSQLit(breadString, priceString, intItem);
+                UpdateOrderToSQLit(breadString, priceString, pricecostString, intItem);
                 dialogInterface.dismiss();
                 //synBreadTABLE();
             }   // event
@@ -213,7 +216,7 @@ public class showMenuActivity extends AppCompatActivity {
         objBuilder.show();
     }   // ChooseItem
 
-    private void UpdateOrderToSQLit(String breadString, String priceString, int intItem) {
+    private void UpdateOrderToSQLit(String breadString, String priceString, String pricecostString,int intItem) {
 
         int intID = Integer.parseInt(strID);  //  parseInt(strID) ถ้าโยน อักษร 5 มา จะเป็น เลข 5
         ManageTABLE objManageTABLE = new ManageTABLE(this);
@@ -224,12 +227,13 @@ public class showMenuActivity extends AppCompatActivity {
                 resultStrings[4],   // เบอร์โทรลูกค้า
                 breadString,        // ชื่อขนมปังที่สั่ง
                 priceString,        // ราคาขนมปัง
+                pricecostString,    // ราคาต้นทุนขนมปัง
                 Integer.toString(intItem));  // จำนวนขนมปัง
     }   //UpdateOrderToSQLit
 
     private void addValueToSQLite(String strName, String strSurname,
                                   String strAddress, String strPhone,
-                                  String strbread, String strPrice, String strItem) {
+                                  String strbread, String strPrice, String strPriceCost, String strItem) {
         Log.d("hey", "Name " + strName);
         Log.d("hey", "Surname " + strSurname);
         Log.d("hey", "Address " + strAddress);
@@ -260,7 +264,7 @@ public class showMenuActivity extends AppCompatActivity {
                         MODE_PRIVATE, null);
                 objSqLiteDatabase.delete(ManageTABLE.TABLE_ORDER,  // ลบที่ซ้ำ
                         ManageTABLE.COLUMN_id + "=" + Integer.parseInt(myResultStrings[0]), null);
-                addOrderToMySQLite(strName, strDate, strSurname, strAddress, strPhone, strbread, strPrice, strNewItem);
+                addOrderToMySQLite(strName, strDate, strSurname, strAddress, strPhone, strbread, strPrice, strPriceCost, strNewItem);
                 //ส่ง Orderที่ลูกค้าสั่ง อีก 1 แถว เพราะลบชื่อสินค้าที่ ลูกค้าสั่งซ้ำ
             }
 
@@ -276,7 +280,7 @@ public class showMenuActivity extends AppCompatActivity {
                 objMyAlertDialog.errorDialog(showMenuActivity.this,"สินค้ามีไม่พอให้สั่งครับ",strbread +" ในสต๊อกมีอยู่ "+ stockstring + " ชิ้น");
             }else {
                 addOrderToMySQLite(strName, strDate, strSurname, strAddress,  //ถ้าลูกค้าไม่ได้ เลือกสินค้า เดิม ก็ เพิ่ม ปกติ
-                        strPhone, strbread, strPrice, strItem);
+                        strPhone, strbread, strPrice, strPriceCost, strItem);
             }
 
         }
@@ -289,10 +293,11 @@ public class showMenuActivity extends AppCompatActivity {
                                     String strPhone, // เบอร์โทร
                                     String strbread, // ชื่อขนม
                                     String strPrice, // ราคา
+                                    String strPriceCost, // ราคาต้นทุน
                                     String strItem) { // จำนวน
         ManageTABLE objManageTABLE = new ManageTABLE(this);
         objManageTABLE.addNewOrder(strName, strDate, strSurname,
-                strAddress, strPhone, strbread, strPrice, strItem);
+                strAddress, strPhone, strbread, strPrice, strPriceCost , strItem);
 
         Toast.makeText(showMenuActivity.this, "เลือกสินค้าสำเร็จ", Toast.LENGTH_SHORT).show();
         // โขว์ข้อความ "เพิ่มสินค้าสำเร็จ" แล้วหายไปภายใน 3.5 วิ

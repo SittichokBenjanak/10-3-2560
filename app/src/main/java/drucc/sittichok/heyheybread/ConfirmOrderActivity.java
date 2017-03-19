@@ -234,6 +234,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 String strBread = objCursor.getString(objCursor.getColumnIndex(ManageTABLE.COLUMN_Bread)); // รับค่าชื่อขนมปัง
                 String strPrice = objCursor.getString(objCursor.getColumnIndex(ManageTABLE.COLUMN_Price)); // รับค่าราคา
                 String strItem = objCursor.getString(objCursor.getColumnIndex(ManageTABLE.COLUMN_Item)); // รับค่าไอเทม
+                String strPriceCost = objCursor.getString(objCursor.getColumnIndex(ManageTABLE.COLUMN_PriceCost));
                 // Update to mySQL
                 StrictMode.ThreadPolicy myPolicy = new StrictMode.ThreadPolicy
                         .Builder().permitAll().build();
@@ -261,7 +262,8 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                         strBread,
                         strItem,
                         strPrice,
-                        strPriceTotal);
+                        strPriceTotal,
+                        strPriceCost);
                 objCursor.moveToNext(); // ทำต่อ
             }   // for
             objCursor.close(); // คืนหน่วยความจำ
@@ -422,7 +424,8 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                                        String strProductID,
                                        String strAmount,
                                        String strPrice,
-                                       String strpriceTotal) {
+                                       String strpriceTotal,
+                                       String strpriceCost) {
         OkHttpClient okHttpClient = new OkHttpClient();
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("isAdd", "true")
@@ -432,6 +435,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 .add("Amount", strAmount)
                 .add("Price", strPrice)
                 .add("PriceTotal", strpriceTotal)
+                .add("PriceCost", strpriceCost)
                 .build();
         Request.Builder builder = new Request.Builder();
         Request request = builder.url("http://192.168.1.113/sittichok/add/add_tborderdetail.php")

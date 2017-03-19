@@ -41,6 +41,7 @@ public class MyOpenHelper extends SQLiteOpenHelper{
             "Phone text," +
             "Bread text," +
             "Price text," +
+            "PriceCost text," +
             "Item text)";
 
     private static final String CREATE_TBORDER = "create table tborder(" +
@@ -58,7 +59,8 @@ public class MyOpenHelper extends SQLiteOpenHelper{
             "Product_ID text," +
             "Amount text," +
             "Price text," +
-            "PriceTotal text)";
+            "PriceTotal text," +
+            "PriceCost text)";
 
     public MyOpenHelper(Context context) {
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
