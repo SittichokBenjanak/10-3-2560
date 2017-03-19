@@ -55,7 +55,7 @@
     <string name="mouny">คงเหลือ : </string>
     <string name="item">คงเหลือ</string>
     <string name="amount">ชิ้น</string>
-    <string name="item2">ราคา/ชิ้น</string>
+    <string name="item2">บาท/ชิ้น</string>
     <string name="idbarcode">รายละเอียดการสั่งซื้อ</string>
     <string name="pleas">แคปหน้าจอเพื่อใช้ยืนยัน</string>
     <string name="fimish">เสร็จสิ้น</string>

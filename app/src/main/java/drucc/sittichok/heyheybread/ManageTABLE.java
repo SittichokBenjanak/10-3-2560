@@ -25,10 +25,12 @@ public class ManageTABLE {
     public static final String COLUMN_Address = "Address";
     public static final String COLUMN_Phone = "Phone";
     public static final String COLUMN_Balance = "Balance";
+    public static final String COLUMN_Dateregis = "Dateregis";
 
     public static final String TABLE_BREAD = "breadtable";
     public static final String COLUMN_Bread = "Bread";
     public static final String COLUMN_Price = "Price";
+    public static final String COLUMN_PriceCost = "PriceCost";
     public static final String COLUMN_Amount2 = "Amount";
     public static final String COLUMN_Image = "Image";
     public static final String COLUMN_Status = "Status";
@@ -285,6 +287,7 @@ public class ManageTABLE {
     public long addNewBread(String strID3,
                             String strBread,
                             String strPrice,
+                            String strPriceCost,
                             String strAmount2,
                             String strImage,
                             String strStatus) {
@@ -293,6 +296,7 @@ public class ManageTABLE {
         objContentValues.put(COLUMN_id,strID3);
         objContentValues.put(COLUMN_Bread,strBread);
         objContentValues.put(COLUMN_Price,strPrice);
+        objContentValues.put(COLUMN_PriceCost,strPriceCost);
         objContentValues.put(COLUMN_Amount2,strAmount2);
         objContentValues.put(COLUMN_Image,strImage);
         objContentValues.put(COLUMN_Status,strStatus);
@@ -308,7 +312,8 @@ public class ManageTABLE {
                            String strSurname,
                            String strAddress,
                            String strPhone,
-                           String strBalance) {
+                           String strBalance,
+                           String strDateregis) {
         ContentValues objContentValues = new ContentValues();
         //ContentValues คือ obj ที่ใช้ในการเชื่อมต่อฐานข้อมูล มันคือตัวกลาง
         objContentValues.put(COLUMN_id, strID4);
@@ -319,6 +324,7 @@ public class ManageTABLE {
         objContentValues.put(COLUMN_Address,strAddress);
         objContentValues.put(COLUMN_Phone,strPhone);
         objContentValues.put(COLUMN_Balance,strBalance);
+        objContentValues.put(COLUMN_Dateregis,strDateregis);
 
         return writeSqLiteDatabase.insert(TABLE_USER,null,objContentValues);
 

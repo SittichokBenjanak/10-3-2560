@@ -163,8 +163,9 @@ public class MainActivity extends AppCompatActivity {
                             String strAddress = object.getString(ManageTABLE.COLUMN_Address);
                             String strPhone = object.getString(ManageTABLE.COLUMN_Phone);
                             String strBalance = object.getString(ManageTABLE.COLUMN_Balance);
+                            String strDateregis = object.getString(ManageTABLE.COLUMN_Dateregis);
                             objManageTABLE.addNewUser(strID7, strUser, strPassword, strName, strSurname,
-                                    strAddress, strPhone, strBalance);
+                                    strAddress, strPhone, strBalance, strDateregis);
                             break;
 
                     }   //switch

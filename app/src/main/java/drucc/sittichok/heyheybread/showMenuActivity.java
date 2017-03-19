@@ -112,11 +112,12 @@ public class showMenuActivity extends AppCompatActivity {
                     String strID3 = jsonObject.getString("id");
                     String strBread = jsonObject.getString(ManageTABLE.COLUMN_Bread);
                     String strPrice = jsonObject.getString(ManageTABLE.COLUMN_Price);
+                    String strPriceCost = jsonObject.getString(ManageTABLE.COLUMN_PriceCost);
                     String strAmount2 = jsonObject.getString(ManageTABLE.COLUMN_Amount2);
                     String strImage = jsonObject.getString(ManageTABLE.COLUMN_Image);
                     String strStatus = jsonObject.getString(ManageTABLE.COLUMN_Status);
                     ManageTABLE manageTABLE = new ManageTABLE(showMenuActivity.this);
-                    manageTABLE.addNewBread(strID3, strBread, strPrice, strAmount2, strImage, strStatus);
+                    manageTABLE.addNewBread(strID3, strBread, strPrice, strPriceCost, strAmount2, strImage, strStatus);
                 } //for
                 ListViewController();
             } catch (Exception e) {
