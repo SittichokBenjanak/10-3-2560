@@ -47,7 +47,7 @@ import java.util.Random;
 public class ConfirmOrderActivity extends AppCompatActivity {
     // Explicit
     private TextView dateTextView, nameTextView,statusTextView,
-            totalTextView,numberorderTextView;
+            totalTextView,numberorderTextView,vatTextView;
     private String dateString,nameString,surnameString;
     private ListView orderListView;
     private int totalAnInt = 0;
@@ -56,7 +56,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
     private String strOrderNo;
     private int orderDetailAnInt = 0;
     private String strOrderNumber ;
-    private String Balane;
+    private String Balane, vatString;
     private String Barcode, strSumprice;
     private ManageTABLE objManageTABLE;
 
@@ -276,7 +276,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             // Update tborder on Server
             updateTotborder(strDate,
                     strIDuser,
-                    Integer.toString(totalAnInt),
+                    vatString,
                     "จัดเตรียม",Barcode);
             int sumbalance = intBalane - totalAnInt ;
             String strsumbalance = Integer.toString(sumbalance);
@@ -517,6 +517,12 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         nameTextView.setText("ผู้สั่งซื้อ : " + nameString + " " + surnameString); // นำค่า ชื่อ กัย นามสกุล ใส่ไปใน nameTextView
         statusTextView.setText("ยอดเงินคงเหลือ : " + strBalce + " " + "บาท"); // นำค่า ที่อยู่  ใส่ไปใน addressTextView
         totalTextView.setText(strSumprice); // นำค่า ราคารวมทั้งหมด ใส่ไปใน totalTextView
+
+        int vatint = Integer.parseInt(strSumprice);
+        int vatint2 = (vatint*7)/100;
+        vatString = Integer.toString(vatint2 + vatint);
+        vatTextView.setText(vatString);
+
     }   // showView
     private void readAllData() {
         SQLiteDatabase objSqLiteDatabase = openOrCreateDatabase(MyOpenHelper.DATABASE_NAME,
@@ -610,6 +616,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         nameTextView = (TextView) findViewById(R.id.textView20);  // ตำแหน่ง ชื่อ
         statusTextView = (TextView) findViewById(R.id.textView21); // ตำแหน่งที่อยู่
         totalTextView = (TextView) findViewById(R.id.textView23); // ตำแหน่งราคารวม
+        vatTextView = (TextView) findViewById(R.id.textView63); // ตำแหน่งราคารวม vat
         orderListView = (ListView) findViewById(R.id.listView2); // ตำแหน่งรายการสินค้าที่ลูกค้าสั่งซื้อ
         numberorderTextView = (TextView) findViewById(R.id.textView30); // ตำแหน่ง รหัสรายการสั่งซื้อ
     }   //bindWidget

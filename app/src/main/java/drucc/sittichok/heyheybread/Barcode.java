@@ -21,6 +21,7 @@ public class Barcode extends AppCompatActivity {
     private ImageView imageView;
     private String idString, idBarcode,idOrder,Date,Name,Surname,SumTotal;
     private TextView Text,NumberOrder,Dateorder,NameOrder,TotalOrder;
+    private int VatTotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,11 @@ public class Barcode extends AppCompatActivity {
         NumberOrder.setText("เลขที่สั่งซื้อ : " + idOrder);
         Dateorder.setText("วันที่สั่งซื้อ : " + Date);
         NameOrder.setText("ผู้สั่งซื้อ : " + Name + " " + Surname);
-        TotalOrder.setText("ยอดสั่งซื้อทั้งหมด : " + SumTotal + " " + "บาท");
+        VatTotal = Integer.parseInt(SumTotal);
+        int Valint = (VatTotal * 7) / 100;
+        int SumVate = Valint + VatTotal;
+        String totalVat = Integer.toString(SumVate);
+        TotalOrder.setText("ยอดสั่งซื้อทั้งหมด : " + totalVat + " " + "บาท");
     }   // settext
 
     private void showview() {
