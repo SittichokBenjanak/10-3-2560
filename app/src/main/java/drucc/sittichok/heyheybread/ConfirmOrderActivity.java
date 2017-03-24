@@ -47,7 +47,7 @@ import java.util.Random;
 public class ConfirmOrderActivity extends AppCompatActivity {
     // Explicit
     private TextView dateTextView, nameTextView,statusTextView,
-            totalTextView,numberorderTextView,vatTextView;
+            totalTextView,numberorderTextView;
     private String dateString,nameString,surnameString;
     private ListView orderListView;
     private int totalAnInt = 0;
@@ -56,7 +56,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
     private String strOrderNo;
     private int orderDetailAnInt = 0;
     private String strOrderNumber ;
-    private String Balane, vatString;
+    private String Balane;
     private String Barcode, strSumprice;
     private ManageTABLE objManageTABLE;
 
@@ -177,14 +177,21 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         objCursor.close();
     }   // balance
     private void orderNumber() {
-        SQLiteDatabase objSqLiteDatabase = openOrCreateDatabase(MyOpenHelper.DATABASE_NAME,
-                MODE_PRIVATE, null);
-        Cursor cursor = objSqLiteDatabase.rawQuery("SELECT * FROM " + ManageTABLE.TABLE_TBORDER, null);
-        cursor.moveToLast();
-        strOrderNumber = cursor.getString(cursor.getColumnIndex(ManageTABLE.COLUMN_id));
-        int intOrderNumber = Integer.parseInt(strOrderNumber)+1;
-        strOrderNumber = Integer.toString(intOrderNumber);
-        cursor.close();
+
+        try {
+            SQLiteDatabase objSqLiteDatabase = openOrCreateDatabase(MyOpenHelper.DATABASE_NAME,
+                    MODE_PRIVATE, null);
+            Cursor cursor = objSqLiteDatabase.rawQuery("SELECT * FROM " + ManageTABLE.TABLE_TBORDER, null);
+            cursor.moveToLast();
+            strOrderNumber = cursor.getString(cursor.getColumnIndex(ManageTABLE.COLUMN_id));
+            int intOrderNumber = Integer.parseInt(strOrderNumber)+1;
+            strOrderNumber = Integer.toString(intOrderNumber);
+            cursor.close();
+        } catch (Exception e) {
+            strOrderNumber = "1";
+        }
+
+
     }   // orderNumber
     public class ConnectedOrderDetail extends AsyncTask<Void, Void, String> {
         @Override
@@ -230,6 +237,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             Cursor objCursor = objSqLiteDatabase.rawQuery("SELECT * FROM "+ ManageTABLE.TABLE_ORDER, null);  // เลือกOrder ที่ลูกค้าสั่งทั้งหมด
             objCursor.moveToFirst();  // moveToFirst ให้เลือกตำแหน่ง ของข้อมูล Order อยู่บนสุด
             for (int i =0; i<objCursor.getCount();i++) {    // นำOrder มานับแถว ถ้ามีข้อมูล ให้ทำ
+
                 strDate = objCursor.getString(objCursor.getColumnIndex(ManageTABLE.COLUMN_Date));  // รับค่า เวลา
                 String strBread = objCursor.getString(objCursor.getColumnIndex(ManageTABLE.COLUMN_Bread)); // รับค่าชื่อขนมปัง
                 String strPrice = objCursor.getString(objCursor.getColumnIndex(ManageTABLE.COLUMN_Price)); // รับค่าราคา
@@ -245,8 +253,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
                 // Update to tborderdetail on Server
                 //Log.d("12April", "clickFinish OrderNo ล่าสุดที่อ่าได้ ==> " + strOrderNo);
-                int intOrderNo = Integer.parseInt(strOrderNo)+ 1;
-                String strNextOrderNo = Integer.toString(intOrderNo);
+
                 orderDetailAnInt += 1;
                 //Log.d("12April", "OrderDetailID(" + (i + 1) +")" + orderDetailAnInt);
                 String strOrderDetail = Integer.toString(orderDetailAnInt);
@@ -257,13 +264,26 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 int PriceTotal = intAmount * intPrice ;
                 String strPriceTotal = Integer.toString(PriceTotal);
                 //Log.d("12April", "Amount * Price = " + intAmount + "x" + intPrice + " = " + PriceTotal);
-                updateTotborderdetail(strNextOrderNo,
-                        strOrderDetail,
-                        strBread,
-                        strItem,
-                        strPrice,
-                        strPriceTotal,
-                        strPriceCost);
+                try {
+                    int intOrderNo = Integer.parseInt(strOrderNo)+ 1;
+                    String strNextOrderNo = Integer.toString(intOrderNo);
+                    updateTotborderdetail(strNextOrderNo,
+                            strOrderDetail,
+                            strBread,
+                            strItem,
+                            strPrice,
+                            strPriceTotal,
+                            strPriceCost);
+                } catch (Exception e) {
+                    updateTotborderdetail("1",
+                            strOrderDetail,
+                            strBread,
+                            strItem,
+                            strPrice,
+                            strPriceTotal,
+                            strPriceCost);
+                }
+
                 objCursor.moveToNext(); // ทำต่อ
             }   // for
             objCursor.close(); // คืนหน่วยความจำ
@@ -274,10 +294,11 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
 
             // Update tborder on Server
-            updateTotborder(strDate,
-                    strIDuser,
-                    vatString,
-                    "จัดเตรียม",Barcode);
+                updateTotborder(strDate,
+                        strIDuser,
+                        strSumprice,
+                        "จัดเตรียม",Barcode);
+
             int sumbalance = intBalane - totalAnInt ;
             String strsumbalance = Integer.toString(sumbalance);
             updateMoneyuser(strIDuser,strsumbalance);
@@ -426,35 +447,38 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                                        String strPrice,
                                        String strpriceTotal,
                                        String strpriceCost) {
-        OkHttpClient okHttpClient = new OkHttpClient();
-        RequestBody requestBody = new FormEncodingBuilder()
-                .add("isAdd", "true")
-                .add("OrderNo", strOrderNo)
-                .add("OrderDetail_ID", strorderDetail_ID)
-                .add("Product_ID", strProductID)
-                .add("Amount", strAmount)
-                .add("Price", strPrice)
-                .add("PriceTotal", strpriceTotal)
-                .add("PriceCost", strpriceCost)
-                .build();
-        Request.Builder builder = new Request.Builder();
-        Request request = builder.url("http://192.168.1.113/sittichok/add/add_tborderdetail.php")
-                .post(requestBody).build();
-        Call call = okHttpClient.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                Log.d("12April", "Fail to Upload");
-            }
-            @Override
-            public void onResponse(Response response) throws IOException {
-                try {
-                    Log.d("12April", "Finish to update ==> "+ response.body().string());
-                } catch (Exception e) {
-                    Log.d("12April", "Error upload ==> "+ e.toString());
+
+            OkHttpClient okHttpClient = new OkHttpClient();
+            RequestBody requestBody = new FormEncodingBuilder()
+                    .add("isAdd", "true")
+                    .add("OrderNo", strOrderNo)
+                    .add("OrderDetail_ID", strorderDetail_ID)
+                    .add("Product_ID", strProductID)
+                    .add("Amount", strAmount)
+                    .add("Price", strPrice)
+                    .add("PriceTotal", strpriceTotal)
+                    .add("PriceCost", strpriceCost)
+                    .build();
+            Request.Builder builder = new Request.Builder();
+            Request request = builder.url("http://192.168.1.113/sittichok/add/add_tborderdetail.php")
+                    .post(requestBody).build();
+            Call call = okHttpClient.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    Log.d("12April", "Fail to Upload");
                 }
-            }
-        });
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    try {
+                        Log.d("12April", "Finish to update ==> "+ response.body().string());
+                    } catch (Exception e) {
+                        Log.d("12April", "Error upload ==> "+ e.toString());
+                    }
+                }
+            });
+
+
     }   // updateTotborderdetail
     private String findProductID(String strBread) {
         String strProductID = null;
@@ -517,11 +541,6 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         nameTextView.setText("ผู้สั่งซื้อ : " + nameString + " " + surnameString); // นำค่า ชื่อ กัย นามสกุล ใส่ไปใน nameTextView
         statusTextView.setText("ยอดเงินคงเหลือ : " + strBalce + " " + "บาท"); // นำค่า ที่อยู่  ใส่ไปใน addressTextView
         totalTextView.setText(strSumprice); // นำค่า ราคารวมทั้งหมด ใส่ไปใน totalTextView
-
-        int vatint = Integer.parseInt(strSumprice);
-        int vatint2 = (vatint*7)/100;
-        vatString = Integer.toString(vatint2 + vatint);
-        vatTextView.setText(vatString);
 
     }   // showView
     private void readAllData() {
@@ -616,7 +635,6 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         nameTextView = (TextView) findViewById(R.id.textView20);  // ตำแหน่ง ชื่อ
         statusTextView = (TextView) findViewById(R.id.textView21); // ตำแหน่งที่อยู่
         totalTextView = (TextView) findViewById(R.id.textView23); // ตำแหน่งราคารวม
-        vatTextView = (TextView) findViewById(R.id.textView63); // ตำแหน่งราคารวม vat
         orderListView = (ListView) findViewById(R.id.listView2); // ตำแหน่งรายการสินค้าที่ลูกค้าสั่งซื้อ
         numberorderTextView = (TextView) findViewById(R.id.textView30); // ตำแหน่ง รหัสรายการสั่งซื้อ
     }   //bindWidget
