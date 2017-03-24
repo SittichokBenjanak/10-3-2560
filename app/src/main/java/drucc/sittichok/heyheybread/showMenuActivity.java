@@ -5,9 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.nfc.Tag;
 import android.os.AsyncTask;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,22 +13,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -148,6 +135,7 @@ public class showMenuActivity extends AppCompatActivity {
                 MODE_PRIVATE, null);
         Cursor objCursor = objSqLiteDatabase.rawQuery("SELECT * FROM " + ManageTABLE.TABLE_ORDER, null);// ดึงค่าจากตาราง OrderTABLE ทั้งหมด
         if (objCursor.getCount() > 0) { // นับค่าที่ดึงมาว่ามีกี่แถว แล้ว เปรียบเทียบกับ 0
+
             //Have Data มีข้อมูล
             Intent objIntent = new Intent(showMenuActivity.this, ConfirmOrderActivity.class); // ให้โชว์หน้า ConfirmOrderActivity
             objIntent.putExtra("idUser", strID); // ส่งID ของลูกค้าไปด้วย
@@ -161,6 +149,8 @@ public class showMenuActivity extends AppCompatActivity {
             // แสดงกล่องข้อความว่า "กรุณา Order","กรุณาสั่งอาหารก่อนครับ"
         }
     }   // clickConfirmOrder
+
+
 
     private void ListViewController() {
         // Setup Value

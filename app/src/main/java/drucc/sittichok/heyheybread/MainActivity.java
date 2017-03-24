@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loading() {
 
-        final ProgressDialog loading = ProgressDialog.show(MainActivity.this, "กำลังโหลดข้อมูล", "กรุณารอสักครู่", false,false);
+        final ProgressDialog loading = ProgressDialog.show(MainActivity.this, "กำลังโหลดข้อมูล", "กรุณารอสักครู่...", false,false);
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadingCheckuser() {
 
-        final ProgressDialog loading = ProgressDialog.show(MainActivity.this, "กำลังตรวจสอบข้อมูล", "กรุณารอสักครู่", false,false);
+        final ProgressDialog loading = ProgressDialog.show(MainActivity.this, "กำลังตรวจสอบข้อมูล", "กรุณารอสักครู่...", false,false);
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                         loading.dismiss();
                     }
 
-                }, 3000);
+                }, 2000);
 
     }   // loadingCheckuser
 

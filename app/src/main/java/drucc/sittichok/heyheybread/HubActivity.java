@@ -1,5 +1,6 @@
 package drucc.sittichok.heyheybread;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -153,6 +154,7 @@ public class HubActivity extends AppCompatActivity implements View.OnClickListen
         switch (view.getId()) {
             case R.id.imageView2:
                 //Order Bread
+
                 Intent objIntent = new Intent(HubActivity.this, showMenuActivity.class);
                 objIntent.putExtra("ID", idString);
                 startActivity(objIntent);
@@ -160,6 +162,7 @@ public class HubActivity extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.imageView4:
                 //Edit Account
+
                 Intent intent = new Intent(HubActivity.this, EditUser.class);
                 intent.putExtra("ID", idString);
                 startActivity(intent);
@@ -167,6 +170,7 @@ public class HubActivity extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.imageView5:
                 //My Map
+
                 Intent Maps = new Intent(HubActivity.this, MapsActivity.class);
                 startActivity(Maps);
                 break;
@@ -177,6 +181,7 @@ public class HubActivity extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.imageView10:
                 // checkmoney
+
                 Intent money = new Intent(HubActivity.this, CheckmoneyActivity.class);
                 money.putExtra("ID", idString);
                 startActivity(money);
@@ -185,11 +190,13 @@ public class HubActivity extends AppCompatActivity implements View.OnClickListen
         }   //switch
     }   // onClick
 
+
     private void checkHistory() {
         SQLiteDatabase objSqLiteDatabase = openOrCreateDatabase(MyOpenHelper.DATABASE_NAME,
                 MODE_PRIVATE, null);
         Cursor objCursor = objSqLiteDatabase.rawQuery("SELECT * FROM " + ManageTABLE.TABLE_TBORDER + " WHERE CustomerID = " + idString, null);
         if (objCursor.getCount() > 0) {
+
             Intent intent2 = new Intent(HubActivity.this, HistoryActivity.class);
             intent2.putExtra("ID", idString);
             startActivity(intent2);
