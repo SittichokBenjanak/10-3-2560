@@ -1,5 +1,6 @@
 package drucc.sittichok.heyheybread;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Loading
+        loading();
         // Bind Widget
         bindWidget();
         //Connected Database ทำให้สามารถเรียกใช้ เมดตอด ที่ อยู่ ใน ManageTABLE ได้
@@ -41,7 +44,23 @@ public class MainActivity extends AppCompatActivity {
         deleteAllSQLite();
         //Synchronize JSON to SQLite
         synJSONtoSQLite();
+
+
     }   // OnCreate
+
+    private void loading() {
+
+        final ProgressDialog loading = ProgressDialog.show(MainActivity.this, "กำลังโหลดข้อมูล", "กรุณารอสักครู่", false,false);
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        loading.dismiss();
+                    }
+
+                }, 3000);
+
+    }   // loading
 
     public void onBackPressed() {
         android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(this);
@@ -68,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void clickLogin(View view) {
         try {
+
             // Check Space เช็คว่า ถ้า ช่องที่กรอกข้อมูล อันใด อันหนึ่งว่าง ให้ โชว์ ข้อความ  "มีช่องว่าง","กรุณากรอกให้ครบ" ที่หน้า MainActivity.this
             userString = userEditText.getText().toString().trim(); // รับค่าเป็น text แปลงเป็น String ,trim ตัดช่องว่าง
             passwordString = passwordEditText.getText().toString().trim();
@@ -77,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 objMyAlertDialog.errorDialog(MainActivity.this,"มีช่องว่าง","กรุณากรอกข้อมูลให้ครบ");
             } else {
                 //ไม่มีช่องว่าง
+
                 checkUser();
             }
 
@@ -84,6 +105,20 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Login ==> " + e.toString());
         }
     }   // clickLogin
+
+    private void loadingCheckuser() {
+
+        final ProgressDialog loading = ProgressDialog.show(MainActivity.this, "กำลังตรวจสอบข้อมูล", "กรุณารอสักครู่", false,false);
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        loading.dismiss();
+                    }
+
+                }, 3000);
+
+    }   // loadingCheckuser
 
     private void checkUser() {
         try {
@@ -94,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
             }else {
                 if (passwordString.equals(resultStrings[2])) {
                     // equals คือ = เปรียบเทียบ PasswordString ที่ลูกค้ากรอกมา ถ้า ตรงกับ Pass ที่อยู่ในฐานข้อมูล
+                    loadingCheckuser();
                     Intent objIntent = new Intent(MainActivity.this, HubActivity.class);
                     objIntent.putExtra("ID", resultStrings[0]);
                     startActivity(objIntent);
